@@ -1,0 +1,28 @@
+name: talker
+services:
+
+  talker:
+    build: .
+    network_mode: service:husarnet
+    depends_on: 
+      husarnet: { condition: service_healthy } # husarnet service is healthy if all hosts listed in WAIT_HOSTNAMES are reachable
+    environment:
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///var/tmp/husarnet-cyclone.xml
+    command: ros2 run demo_nodes_cpp talker
+
+  husarnet:
+    image: husarnet/husarnet:2.0.180
+    volumes:
+      - /var/lib/husarnet
+    sysctls:
+      - net.ipv6.conf.all.disable_ipv6=0
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun
+    environment:
+      - HOSTNAME=talker-host
+      - JOINCODE
+      # - HUSARNET_DEBUG=1
+      - WAIT_HOSTNAMES=talker-host, listener-host
