@@ -7,8 +7,8 @@ services:
     depends_on: 
       husarnet: { condition: service_healthy } # husarnet service is healthy if all hosts listed in WAIT_HOSTNAMES are reachable
     environment:
-      - RMW_IMPLEMENTATION=rmw_fastrtps_cpp
-      - FASTRTPS_DEFAULT_PROFILES_FILE=/var/tmp/husarnet-fastdds-simple.xml
+      - RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+      - CYCLONEDDS_URI=file:///var/tmp/husarnet-cyclone.xml
     command: ros2 run demo_nodes_cpp listener
 
   husarnet:
